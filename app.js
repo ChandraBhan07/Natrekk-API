@@ -10,11 +10,14 @@ const globalErrorHandler = require('./controllers/errorController');
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cors = require('cors');
+const hpp = require('hpp');
 // Global Middlwares
 
 // Logging
 // if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(helmet());
+app.use(cors());
 const limiter = rateLimit({
     max: 100,
     windowMs: 60 * 60 * 1000,
@@ -22,11 +25,13 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+app.use(mongoSanitize());
+app.use(xss())
+
 // Body parser
 app.use(express.json({ limit: '10kb' }));
 app.use(xss());
 
-const hpp = require('hpp');
 app.use(hpp({
     whitelist: [
         'duration',
@@ -44,7 +49,6 @@ app.use(express.static(`${__dirname}/public`));
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/treks', trekRouter);
 app.use('/api/v1/reviews', reviewRouter);
-
 
 // Handling undefined routes 404
 app.all('*', (req, res, next) => {
