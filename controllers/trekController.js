@@ -136,7 +136,7 @@ exports.uploadTrekImages = upload.fields([
 ]);
 
 exports.resizeTrekImages = catchAsync(async (req, res, next) => {
-    if (!req.files) next();
+    if (!req.files) return next();
     if (req.files.imageCover) {
         // 1. Image Cover
         req.body.imageCover = `trek-${req.params.id}-${Date.now()}-cover.jpeg`;
