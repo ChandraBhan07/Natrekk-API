@@ -228,3 +228,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.me = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+};
+
+
