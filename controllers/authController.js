@@ -181,10 +181,8 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
     if (!req.body.passwordCurrent) return next(new AppError('Please provide your current password for verification.', 400));
     if (!req.body.password) return next(new AppError('Please provide your new password.', 400));
     if (req.body.password !== req.body.passwordConfirm) return next(new AppError('Password and confirm password do not match.', 400));
-    console.log('updatepassword', req.body.passwordCurrent, req.body.password, req.body.passwordConfirm);
     // 2. Get User from collection
     const user = await User.findById(req.user.id).select('+password');
-    console.log('updatepassword before', user.password);
     // 3. Check if posted current password is correct
     if (!(await user.checkPassword(req.body.passwordCurrent, user.password))) {
         return next(new AppError('Your current password is incorrect.', 401));
@@ -192,7 +190,6 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
     // 4. update password
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
-    console.log('updatepassword after', user);
     await user.save();
     createSendToken(user, 200, res);
 });

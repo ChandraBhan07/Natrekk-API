@@ -5,7 +5,6 @@ const Trek = require('../models/trekModel');
 dotenv.config({ path: '../.env' });
 
 const db = process.env.DB.replace('PASSWORD', process.env.DB_PASSWORD);
-console.log(db);
 mongoose.connect(db)
     .then(() => {
         console.log("DB connected");
